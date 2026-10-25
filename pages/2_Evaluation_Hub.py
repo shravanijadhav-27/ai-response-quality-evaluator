@@ -127,6 +127,36 @@ st.markdown(
             min-height: 2.8rem;
             font-weight: 700;
         }
+        
+
+/* Keep all sidebar navigation labels visible */
+[data-testid="stSidebar"] button {
+    width: 100% !important;
+    min-height: 44px !important;
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+    border: 1px solid #475569 !important;
+    border-radius: 10px !important;
+    justify-content: flex-start !important;
+    opacity: 1 !important;
+}
+
+[data-testid="stSidebar"] button p,
+[data-testid="stSidebar"] button span,
+[data-testid="stSidebar"] button div {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+}
+
+[data-testid="stSidebar"] button:hover {
+    background-color: #4f46e5 !important;
+}
+
+}
+
     </style>
     """,
     unsafe_allow_html=True,
@@ -143,19 +173,20 @@ with st.sidebar:
 
     st.markdown("### Project navigation")
 
-    if st.button("🏠 Home page", use_container_width=True):
+    
+    if st.button("🏠  Home page", key="nav_home", use_container_width=True):
         st.switch_page("pages/1_Home.py")
 
-    if st.button("📝 Evaluation Hub", use_container_width=True):
+    if st.button("📝  Evaluation Hub", key="nav_evaluation", use_container_width=True):
         st.switch_page("pages/2_Evaluation_Hub.py")
 
-    if st.button("📊 Results & Analytics", use_container_width=True):
+    if st.button("📊  Results & Analytics", key="nav_results", use_container_width=True):
         st.switch_page("pages/3_Results_Analytics.py")
 
-    if st.button("🗂️ Knowledge Base", use_container_width=True):
+    if st.button("🗂️  Knowledge Base", key="nav_knowledge", use_container_width=True):
         st.switch_page("pages/4_Knowledge_Base.py")
 
-    if st.button("📄 Reports", use_container_width=True):
+    if st.button("📄  Reports", key="nav_reports", use_container_width=True):
         st.switch_page("pages/5_Reports_Documentation.py")
 
     st.divider()
