@@ -155,7 +155,7 @@ st.markdown(
     background-color: #4f46e5 !important;
 }
 
-}
+
 
     </style>
     """,
