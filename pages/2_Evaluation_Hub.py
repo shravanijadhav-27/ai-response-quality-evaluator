@@ -135,17 +135,31 @@ st.markdown(
 # ---------------------------------------------------------
 # Sidebar
 # ---------------------------------------------------------
+
 with st.sidebar:
     st.markdown("## 🧠 Response Evaluator")
     st.caption("Frontend workspace")
     st.divider()
+
     st.markdown("### Project navigation")
-    st.markdown("🏠 Home page")
-    st.markdown("📝 **Evaluation Hub**")
-    st.markdown("📊 Results & Analytics")
-    st.markdown("📚 Knowledge Base")
-    st.markdown("📄 Reports")
+
+    if st.button("🏠 Home page", use_container_width=True):
+        st.switch_page("pages/1_Home.py")
+
+    if st.button("📝 Evaluation Hub", use_container_width=True):
+        st.switch_page("pages/2_Evaluation_Hub.py")
+
+    if st.button("📊 Results & Analytics", use_container_width=True):
+        st.switch_page("pages/3_Results_Analytics.py")
+
+    if st.button("🗂️ Knowledge Base", use_container_width=True):
+        st.switch_page("pages/4_Knowledge_Base.py")
+
+    if st.button("📄 Reports", use_container_width=True):
+        st.switch_page("pages/5_Reports_Documentation.py")
+
     st.divider()
+
     st.markdown("### Current status")
     st.warning("Backend not connected")
     st.caption(
