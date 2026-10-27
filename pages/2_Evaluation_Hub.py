@@ -170,6 +170,37 @@ div[data-testid="stFormSubmitButton"] button {
     font-size: 12px;
     padding-top: 30px;
 }
+
+/* Fix question and answer fields */
+div[data-testid="stTextArea"] textarea {
+    background-color: #FFFFFF !important;
+    color: #17345F !important;
+    -webkit-text-fill-color: #17345F !important;
+    caret-color: #17345F !important;
+    border: 1px solid #B8C9E3 !important;
+    border-radius: 10px !important;
+}
+
+/* Keep placeholder text readable */
+div[data-testid="stTextArea"] textarea::placeholder {
+    color: #71819B !important;
+    -webkit-text-fill-color: #71819B !important;
+    opacity: 1 !important;
+}
+
+/* Keep input fields readable when focused */
+div[data-testid="stTextArea"] textarea:focus {
+    background-color: #FFFFFF !important;
+    color: #17345F !important;
+    border: 1px solid #2867C7 !important;
+    box-shadow: 0 0 0 1px #2867C7 !important;
+}
+
+/* Improve visibility of field labels */
+div[data-testid="stTextArea"] label {
+    color: #17345F !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 

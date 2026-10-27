@@ -7,10 +7,18 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
 from ui import apply_design, render_sidebar
 
 apply_design()
 render_sidebar()
+st.markdown("""
+<style>
+section[data-testid="stSidebarNav"] {
+    display: none;
+}
+</style>
+""", unsafe_allow_html=True)
 # ---------- CUSTOM DESIGN ----------
 st.markdown(
     """
