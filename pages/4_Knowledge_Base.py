@@ -19,7 +19,10 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+from ui import apply_design, render_sidebar
 
+apply_design()
+render_sidebar()
 BUCKET_NAME = "knowledge-documents"
 MAX_FILE_SIZE_MB = 10
 
@@ -145,9 +148,8 @@ def list_documents():
 documents, list_error = list_documents()
 
 if list_error:
-    st.error(
-        "Supabase connected, but the bucket could not be listed. Check that the bucket name is `knowledge-documents` and the configured key has Storage access."
-    )
+    st.error("Supabase Storage error")
+    st.code(str(list_error))
 
 # ---------- Summary cards ----------
 indexed_count = 0  # Text extraction / indexing is not implemented on this page yet.

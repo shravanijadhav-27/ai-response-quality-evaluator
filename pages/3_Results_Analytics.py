@@ -7,7 +7,10 @@ st.set_page_config(
     page_icon="📊",
     layout="wide"
 )
+from ui import apply_design, render_sidebar
 
+apply_design()
+render_sidebar()
 # ---------- PROFESSIONAL STYLING ----------
 st.markdown("""
 <style>
