@@ -2,145 +2,247 @@
 import streamlit as st
 
 
-def apply_design():
+# =========================================================
+# SHARED DESIGN
+# =========================================================
+
+def apply_shared_design():
+    """Shared styling for all EvalAI pages."""
+
     st.markdown(
         """
         <style>
+
+        /* MAIN APPLICATION */
+
         .stApp {
-            background: #F3F6FC;
-            color: #172B4D;
+            background: #F4F7FC;
+            color: #172B45;
         }
 
-        /* Sidebar design */
-        [data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #10264B, #173C70);
-            min-width: 245px;
-        }
-
-        [data-testid="stSidebar"] > div {
+        [data-testid="stHeader"] {
             background: transparent;
         }
 
-        [data-testid="stSidebar"] * {
-            color: #FFFFFF;
+        h1, h2, h3, h4 {
+            color: #142842;
         }
 
-        /* Hide Streamlit's automatic navigation.
-           Keep the custom navigation buttons below. */
-        [data-testid="stSidebarNav"] {
-            display: none !important;
+        p, label {
+            color: #43546B;
         }
 
-        /* Custom sidebar buttons */
-        [data-testid="stSidebar"] button {
-            background: rgba(255, 255, 255, 0.08) !important;
-            border: 1px solid rgba(255, 255, 255, 0.18) !important;
-            border-radius: 10px !important;
-            min-height: 43px;
-            width: 100%;
+
+        /* SIDEBAR */
+
+        section[data-testid="stSidebar"] {
+            background: linear-gradient(
+                180deg,
+                #102747 0%,
+                #173F6B 55%,
+                #102747 100%
+            ) !important;
+
+            border-right: 1px solid #294E78 !important;
+            min-width: 250px;
+        }
+
+        section[data-testid="stSidebar"] > div {
+            background: transparent !important;
+        }
+
+        section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
+            color: #D9E8F8 !important;
+        }
+
+        section[data-testid="stSidebar"] span,
+        section[data-testid="stSidebar"] label {
+            color: #E5F0FF !important;
+        }
+
+        section[data-testid="stSidebar"] hr {
+            border-color: rgba(255,255,255,0.16) !important;
+        }
+
+
+        /* SIDEBAR NAVIGATION LINKS */
+
+        section[data-testid="stSidebar"] [data-testid="stPageLink"] a {
+            display: flex;
+            align-items: center;
+            padding: 11px 13px;
+            border-radius: 9px;
+            color: #EAF3FF !important;
+            background: rgba(255,255,255,0.06) !important;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-decoration: none !important;
+            font-weight: 650;
             transition: 0.2s ease;
         }
 
-        [data-testid="stSidebar"] button:hover {
-            background: #2867C7 !important;
-            border-color: #8CB9FF !important;
+        section[data-testid="stSidebar"] [data-testid="stPageLink"] a:hover {
+            background: rgba(58,166,232,0.22) !important;
+            border-color: rgba(100,190,255,0.35) !important;
+            color: #FFFFFF !important;
         }
 
-        [data-testid="stSidebar"] button p,
-        [data-testid="stSidebar"] button span,
-        [data-testid="stSidebar"] button div {
-            color: white !important;
+
+        /* SIDEBAR COLLAPSE BUTTON */
+
+        [data-testid="stSidebarCollapsedControl"] {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
 
-        /* Main page layout */
-        .block-container {
-            max-width: 1450px;
-            padding-top: 1.8rem;
-            padding-bottom: 2.5rem;
+        button[data-testid="stBaseButton-header"] {
+            color: #FFFFFF !important;
         }
 
-        /* Forms */
-        div[data-testid="stForm"] {
-            background: white;
-            border: 1px solid #DFE7F3;
-            border-radius: 16px;
-            padding: 22px;
+
+        /* GENERAL BUTTONS */
+
+        div.stButton > button {
+            border-radius: 9px;
+            min-height: 40px;
+            font-weight: 650;
         }
 
-        /* Main buttons */
-        .stButton button,
-        div[data-testid="stFormSubmitButton"] button {
-            border-radius: 10px;
-            min-height: 43px;
-            font-weight: 600;
+        div.stButton > button[kind="primary"] {
+            background: #10BED8 !important;
+            color: #062B40 !important;
+            border-color: #10BED8 !important;
         }
 
-        /* Metric cards */
-        div[data-testid="stMetric"] {
-            background: white;
-            padding: 17px;
-            border: 1px solid #DFE7F3;
-            border-radius: 13px;
-        }
         </style>
         """,
         unsafe_allow_html=True,
     )
 
 
+# =========================================================
+# SINGLE SHARED SIDEBAR
+# =========================================================
+
 def render_sidebar():
+    """One consistent EvalAI sidebar across all pages."""
+
     with st.sidebar:
-        # Sidebar branding
-        st.markdown(
-            """
-            <div style="padding:12px 2px 20px;">
-                <div style="font-size:34px;">🧠</div>
-                <div style="font-size:20px;font-weight:800;">
-                    Response Evaluator
-                </div>
-                <div style="font-size:12px;color:#C7D8F5;margin-top:6px;">
-                    AI Quality Assurance Platform
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
 
-        st.divider()
-        st.caption("WORKSPACE")
-
-        # Custom navigation
-        pages = [
-            ("🏠  Home", "pages/1_Home.py"),
-            ("📝  Evaluation Hub", "pages/2_Evaluation_Hub.py"),
-            ("📊  Results & Analytics", "pages/3_Results_Analytics.py"),
-            ("🗂️  Knowledge Base", "pages/4_Knowledge_Base.py"),
-            ("📄  Batch Evaluation", "pages/5_Batch_Evaluation.py"),
-        ]
-
-        for label, path in pages:
-            if st.button(
-                label,
-                key=f"navigation_{path}",
-                use_container_width=True,
-            ):
-                st.switch_page(path)
-
-        st.divider()
-        st.caption("PROJECT STATUS")
-
-        st.markdown(
-            """
+        # BRAND
+        st.html("""
             <div style="
-                background:rgba(255,255,255,0.09);
-                border:1px solid rgba(255,255,255,0.15);
-                border-radius:10px;
-                padding:12px;
-                font-size:12px;
-                line-height:1.7;">
-                🟡 Frontend prototype<br>
-                Backend integration pending
+                padding: 15px 8px 20px;
+                border-bottom: 1px solid rgba(255,255,255,0.16);
+                margin-bottom: 20px;
+            ">
+                <div style="
+                    font-size: 29px;
+                    font-weight: 850;
+                    color: #FFFFFF;
+                    letter-spacing: -1px;
+                ">
+                    Eval<span style="color:#39C8E9;">AI</span>
+                </div>
+
+                <div style="
+                    color: #B9D0E9;
+                    font-size: 11px;
+                    margin-top: 4px;
+                    letter-spacing: 0.5px;
+                ">
+                    AI RESPONSE QUALITY PLATFORM
+                </div>
             </div>
-            """,
-            unsafe_allow_html=True,
+        """)
+
+        # MENU HEADING
+        st.html("""
+            <div style="
+                color: #8EACCC;
+                font-size: 10px;
+                font-weight: 800;
+                letter-spacing: 1.5px;
+                padding: 0 8px 10px;
+            ">
+                MAIN MENU
+            </div>
+        """)
+
+        # HOME
+        st.page_link(
+            "app.py",
+            label="Home",
+            icon=":material/home:",
+            use_container_width=True,
         )
+
+        # EVALUATION HUB
+        st.page_link(
+            "pages/2_Evaluation_Hub.py",
+            label="Evaluation Hub",
+            icon=":material/analytics:",
+            use_container_width=True,
+        )
+
+        # RESULTS ANALYTICS
+        st.page_link(
+            "pages/3_Results_Analytics.py",
+            label="Results Analytics",
+            icon=":material/insert_chart:",
+            use_container_width=True,
+        )
+
+        # KNOWLEDGE BASE
+        st.page_link(
+            "pages/4_Knowledge_Base.py",
+            label="Knowledge Base",
+            icon=":material/library_books:",
+            use_container_width=True,
+        )
+
+        # BATCH EVALUATION
+        st.page_link(
+            "pages/5_Batch_Evaluation.py",
+            label="Batch Evaluation",
+            icon=":material/table_chart:",
+            use_container_width=True,
+        )
+
+        st.divider()
+
+        # WORKSPACE FOOTER
+        st.html("""
+            <div style="
+                padding: 12px 9px;
+                background: rgba(255,255,255,0.07);
+                border: 1px solid rgba(255,255,255,0.10);
+                border-radius: 10px;
+            ">
+                <div style="
+                    color: #FFFFFF;
+                    font-size: 12px;
+                    font-weight: 750;
+                ">
+                    EvalAI Workspace
+                </div>
+
+                <div style="
+                    color: #B9D0E9;
+                    font-size: 10px;
+                    margin-top: 5px;
+                    line-height: 1.5;
+                ">
+                    AI response evaluation
+                    and knowledge management
+                </div>
+            </div>
+        """)
+
+
+# =========================================================
+# COMPATIBILITY FUNCTION
+# =========================================================
+
+def apply_design():
+    apply_shared_design()

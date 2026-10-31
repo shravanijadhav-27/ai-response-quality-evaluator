@@ -8,7 +8,11 @@ st.set_page_config(
     page_icon="📂",
     layout="wide"
 )
-
+st.button(
+    "← Back to Home",
+    on_click=lambda: st.switch_page("app.py"),
+    key="back_to_home"
+)
 apply_design()
 render_sidebar()
 
