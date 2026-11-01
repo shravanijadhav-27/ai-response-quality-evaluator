@@ -89,37 +89,76 @@ def apply_shared_design():
 
         /* SIDEBAR COLLAPSE BUTTON */
 
-        [data-testid="stSidebarCollapsedControl"] {
-            display: flex !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-        }
-
-        button[data-testid="stBaseButton-header"] {
-            color: #FFFFFF !important;
-        }
 
 
-        /* GENERAL BUTTONS */
+/* =========================================================
+   EVALAI SIDEBAR TOGGLE CONTROL
+   ========================================================= */
 
-        div.stButton > button {
-            border-radius: 9px;
-            min-height: 40px;
-            font-weight: 650;
-        }
+/* Keep Streamlit's header and sidebar controls visible */
+[data-testid="stHeader"] {
+    visibility: visible !important;
+}
 
-        div.stButton > button[kind="primary"] {
-            background: #10BED8 !important;
-            color: #062B40 !important;
-            border-color: #10BED8 !important;
-        }
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="stSidebarCollapseButton"],
+[data-testid="collapsedControl"] {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    z-index: 999999 !important;
+}
+
+/* Style the actual toggle button */
+[data-testid="stSidebarCollapsedControl"] button,
+[data-testid="stSidebarCollapseButton"] button,
+[data-testid="collapsedControl"] button,
+[data-testid="stHeader"] button[kind="header"] {
+    background: #102747 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #39C8E9 !important;
+    border-radius: 10px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    opacity: 1 !important;
+}
+
+/* Make the native icon visible */
+[data-testid="stSidebarCollapsedControl"] svg,
+[data-testid="stSidebarCollapseButton"] svg,
+[data-testid="collapsedControl"] svg,
+[data-testid="stHeader"] button[kind="header"] svg {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: #FFFFFF !important;
+    fill: none !important;
+    stroke: #FFFFFF !important;
+    width: 23px !important;
+    height: 23px !important;
+}
+
+/* Hover effect */
+[data-testid="stSidebarCollapsedControl"] button:hover,
+[data-testid="collapsedControl"] button:hover {
+    background: #087C9E !important;
+    border-color: #5DE1F2 !important;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    [data-testid="stSidebarCollapsedControl"] button,
+    [data-testid="collapsedControl"] button {
+        min-width: 46px !important;
+        min-height: 46px !important;
+    }
+}
 
         </style>
         """,
         unsafe_allow_html=True,
     )
-
-
 # =========================================================
 # SINGLE SHARED SIDEBAR
 # =========================================================

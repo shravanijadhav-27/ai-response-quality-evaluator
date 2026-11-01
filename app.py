@@ -1,22 +1,29 @@
+
 import re
+import base64
 from pathlib import Path
 
 import streamlit as st
 import textwrap
+
 # ---------------- PAGE SETUP ----------------
+
 st.set_page_config(
     page_title="EvalAI | AI Response Quality",
     page_icon="",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
+
 from ui import apply_design, render_sidebar
 
 apply_design()
 render_sidebar()
+
 IMAGE_PATH = Path(__file__).parent / "assets" / "ai_quality_illustration.png"
 
 # ---------------- CUSTOM CSS ----------------
+
 st.markdown(
     """
 <style>
@@ -47,15 +54,6 @@ st.markdown(
 
 h1, h2, h3 {
     font-family: 'Manrope', sans-serif;
-}
-
-[data-testid="stSidebar"] {
-    background: #ffffff;
-    border-right: 1px solid var(--border);
-}
-
-[data-testid="stSidebar"] * {
-    color: #19314d;
 }
 
 /* TOP NAVIGATION */
@@ -102,26 +100,45 @@ h1, h2, h3 {
 /* HERO SECTION */
 
 .st-key-hero_section {
-    background:
-        radial-gradient(
-            circle at 10% 80%,
-            rgba(0, 175, 204, .20),
-            transparent 35%
-        ),
-        linear-gradient(
-            115deg,
-            #07192f,
-            #0a2543 60%,
-            #073c55
-        );
+    background: #07192f !important;
     padding: 48px clamp(20px, 6vw, 90px) 85px;
     border-bottom: 1px solid #173d59;
     overflow: hidden;
+    position: relative;
+    isolation: isolate;
 }
 
 .st-key-hero_section [data-testid="stVerticalBlock"] {
     gap: 0.7rem;
 }
+
+/* HERO IMAGE — LARGE BACKGROUND ILLUSTRATION */
+
+/* SEAMLESS HERO IMAGE BLENDING */
+
+.st-key-hero_section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: min(45%, 650px) auto;
+
+    opacity: 1;
+    mix-blend-mode: normal;
+}
+
+/* Keep hero content in front of the image */
+
+.st-key-hero_section [data-testid="stHorizontalBlock"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* HERO TEXT */
 
 .eyebrow {
     color: #9cebf4;
@@ -184,10 +201,6 @@ h1, h2, h3 {
     color: #b8cbdc;
     font-size: 10px;
     margin-top: 8px;
-}
-
-.st-key-hero_section img {
-    border-radius: 16px;
 }
 
 /* BUTTONS */
@@ -366,6 +379,12 @@ div.stButton > button:hover {
         padding-bottom: 80px;
     }
 
+    .st-key-hero_section::before {
+        background-size: 650px auto;
+        background-position: right center;
+        opacity: 0.30;
+    }
+    
     .hero-title {
         font-size: 40px;
     }
@@ -519,16 +538,6 @@ div.stButton > button:hover {
     margin-bottom: 10px;
 }
 
-@media (max-width: 560px) {
-    .eval-panel {
-        padding: 20px 16px;
-    }
-
-    .eval-check {
-        padding: 13px;
-    }
-}
-
 /* FIVE-AGENT ARCHITECTURE */
 
 .agent-section {
@@ -640,9 +649,27 @@ div.stButton > button:hover {
 )
 
 
+# ---------------- HERO IMAGE BACKGROUND ----------------
+
+if IMAGE_PATH.exists():
+    image_base64 = base64.b64encode(
+        IMAGE_PATH.read_bytes()
+    ).decode("ascii")
+
+    st.markdown(
+        f"""
+        <style>
+        .st-key-hero_section::before {{
+            background-image:
+                url("data:image/png;base64,{image_base64}");
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
 
 # ---------------- AUTHENTICATION DIALOGS ----------------
-
 
 def valid_email(email):
     return bool(re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email.strip()))
@@ -667,7 +694,8 @@ def login_dialog():
             st.error("Enter your password.")
         else:
             st.info(
-                "Login form is ready. Connect Supabase Auth " "to enable real sign-in."
+                "Login form is ready. Connect Supabase Auth "
+                "to enable real sign-in."
             )
 
 
@@ -730,10 +758,10 @@ with signup_col:
         signup_dialog()
 
 
-
 # ---------------- HERO SECTION ----------------
 
 with st.container(key="hero_section"):
+
     left_col, right_col = st.columns(
         [1.15, 0.85],
         gap="large",
@@ -765,16 +793,11 @@ with st.container(key="hero_section"):
 
         st.html(hero_html)
 
+    # Image is now displayed as the hero background.
+    # Keep this column to preserve your original column layout.
     with right_col:
-        if IMAGE_PATH.exists():
-            st.image(
-                str(IMAGE_PATH),
-                use_container_width=True,
-            )
-        else:
-            st.warning(
-                f"Hero image not found: {IMAGE_PATH.name}"
-            )
+        pass
+
 
 # ---------------- HERO BUTTONS ----------------
 
@@ -797,8 +820,6 @@ with st.container(key="hero_actions"):
             key="hero_explore",
         ):
             st.switch_page("pages/2_Evaluation_Hub.py")
-
-
 
 
 # ---------------- FEATURES ----------------
@@ -860,6 +881,7 @@ with st.container(key="feature_section"):
                 unsafe_allow_html=True,
             )
 
+
 # ---------------- HOW THE FIVE AGENTS WORK ----------------
 
 st.html("""
@@ -875,6 +897,7 @@ st.html("""
     </div>
 </div>
 """)
+
 
 # STEP 1: INPUT
 
@@ -894,6 +917,7 @@ st.markdown(
 )
 
 st.markdown('<div class="agent-connector">↓</div>', unsafe_allow_html=True)
+
 
 # STEP 2: KNOWLEDGE BASE AND RAG
 
@@ -926,6 +950,7 @@ st.html("""
     </div>
 </div>
 """)
+
 
 # FOUR JUDGE AGENTS
 
@@ -973,6 +998,7 @@ for col, (number, title, description) in zip(agent_cols, agents):
 
 st.markdown('<div class="agent-connector">↓</div>', unsafe_allow_html=True)
 
+
 # STEP 4: VERDICT AGENT
 
 st.markdown(
@@ -992,6 +1018,7 @@ st.markdown(
 )
 
 st.markdown('<div class="agent-connector">↓</div>', unsafe_allow_html=True)
+
 
 # STEP 5: RESULTS
 

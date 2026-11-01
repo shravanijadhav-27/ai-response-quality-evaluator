@@ -1,7 +1,7 @@
-
 import html
 import streamlit as st
-
+from pymongo import MongoClient
+from gridfs import GridFSBucket
 
 # ==================================================
 # PAGE CONFIGURATION
@@ -24,6 +24,71 @@ render_sidebar()
 # ==================================================
 def render_html(content):
     st.html(content)
+# ==================================================
+# MONGODB KNOWLEDGE BASE CONNECTION
+# ==================================================
+
+DATABASE_NAME = "evalai"
+BUCKET_NAME = "knowledge_documents"
+
+
+@st.cache_resource(show_spinner=False)
+def get_mongodb_connection():
+    try:
+        mongodb_uri = st.secrets["MONGODB_URI"]
+        database_name = st.secrets.get(
+            "MONGODB_DATABASE",
+            DATABASE_NAME
+        )
+
+        client = MongoClient(
+            mongodb_uri,
+            serverSelectionTimeoutMS=10000
+        )
+
+        client.admin.command("ping")
+
+        database = client[database_name]
+
+        bucket = GridFSBucket(
+            database,
+            bucket_name=BUCKET_NAME
+        )
+
+        return bucket, None
+
+    except Exception as exc:
+        return None, str(exc)
+
+
+def get_saved_pdf_documents():
+    bucket, error = get_mongodb_connection()
+
+    if error:
+        return [], error
+
+    try:
+        documents = list(
+            bucket.find({}).sort("uploadDate", -1)
+        )
+
+        pdf_documents = [
+            doc for doc in documents
+            if str(doc.filename).lower().endswith(".pdf")
+        ]
+
+        return pdf_documents, None
+
+    except Exception as exc:
+        return [], str(exc)
+
+
+saved_pdf_documents, mongodb_error = get_saved_pdf_documents()
+
+saved_pdf_lookup = {
+    str(doc._id): doc
+    for doc in saved_pdf_documents
+}
 # ==================================================
 # ICON HELPER
 # ==================================================
@@ -1019,6 +1084,27 @@ div[data-testid="stFormSubmitButton"] button:hover {
     min-height: 50px !important;
     border-radius: 12px !important;
 }
+/* Reference section text visibility */
+.st-key-eval_reference label,
+.st-key-eval_document label,
+.st-key-eval_saved_documents label {
+    color: #EAF2FF !important;
+}
+
+.st-key-eval_reference textarea,
+.st-key-eval_document,
+.st-key-eval_saved_documents [data-baseweb="select"] {
+    color: #FFFFFF !important;
+}
+
+.st-key-eval_reference textarea::placeholder {
+    color: #AAB8CC !important;
+    opacity: 1 !important;
+}
+
+.st-key-eval_saved_documents [data-baseweb="select"] * {
+    color: #FFFFFF !important;
+}
 </style>
 """,
     unsafe_allow_html=True,
@@ -1184,6 +1270,7 @@ with left_col:
                 "＋ Add reference answer or upload document"
             ):
 
+                # EXISTING MANUAL REFERENCE ANSWER
                 reference_answer = st.text_area(
                     "Trusted reference answer",
                     placeholder="Enter a verified answer or supporting facts...",
@@ -1191,12 +1278,35 @@ with left_col:
                     key="eval_reference",
                 )
 
+                # EXISTING DOCUMENT UPLOADER
                 reference_document = st.file_uploader(
                     "Upload reference document",
                     type=["pdf", "txt"],
                     accept_multiple_files=False,
                     help="PDF and TXT files are accepted.",
                     key="eval_document",
+                )
+
+                # NEW: SELECT SAVED KNOWLEDGE BASE PDFs
+                st.markdown("**Or select saved Knowledge Base PDFs**")
+
+                if mongodb_error:
+                    st.warning(
+                        "Saved Knowledge Base documents could not be loaded. "
+                        "You can still upload a new document."
+                    )
+
+                elif not saved_pdf_documents:
+                    st.caption(
+                        "No saved PDF documents are available in your Knowledge Base."
+                    )
+
+                selected_saved_documents = st.multiselect(
+                    "Choose existing reference PDFs",
+                    options=list(saved_pdf_lookup.keys()),
+                    format_func=lambda file_id: saved_pdf_lookup[file_id].filename,
+                    placeholder="Select one or more saved PDFs...",
+                    key="eval_saved_documents",
                 )
 
             render_html(
@@ -1378,12 +1488,24 @@ if submitted:
         )
 
         has_reference = bool(
-            reference_answer.strip() or reference_document
+            reference_answer.strip()
+            or reference_document
+            or selected_saved_documents
         )
 
         metric3.metric(
             "Reference Information",
             "Provided" if has_reference else "Not provided",
+        )
+
+        if selected_saved_documents:
+            st.caption(
+                f"{len(selected_saved_documents)} saved Knowledge Base "
+                f"PDF(s) selected."
+            )
+
+        st.session_state["selected_reference_file_ids"] = (
+            selected_saved_documents
         )
 
         st.warning(
