@@ -643,6 +643,153 @@ div.stButton > button:hover {
     margin: 0;
 }
 
+/* =================================
+   MOBILE RESPONSIVENESS IMPROVEMENTS
+================================= */
+
+/* TABLETS */
+@media (max-width: 850px) {
+
+    .st-key-hero_section {
+        padding: 35px 28px 75px;
+    }
+
+    .st-key-hero_section::before {
+        background-size: 48% auto;
+        background-position: right center;
+    }
+
+    .agent-card {
+        padding: 16px 12px;
+    }
+
+    .eval-panel {
+        padding: 22px;
+    }
+}
+
+/* MOBILE PHONES */
+@media (max-width: 560px) {
+
+    /* Main page spacing */
+    .block-container {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    /* Navigation */
+    .topbar {
+        padding: 14px 18px;
+        align-items: center;
+    }
+
+    .brand {
+        font-size: 25px;
+    }
+
+    .navlinks {
+        gap: 18px;
+    }
+
+    /* Hero */
+    .st-key-hero_section {
+        padding: 35px 20px 85px;
+    }
+
+    .st-key-hero_section::before {
+        background-size: 75% auto;
+        background-position: right bottom;
+        opacity: 0.20;
+    }
+
+    .hero-title {
+        font-size: 34px !important;
+        line-height: 1.2;
+        letter-spacing: -1px;
+    }
+
+    .hero-copy {
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .pill-row {
+        gap: 7px;
+    }
+
+    .pill {
+        font-size: 9px;
+    }
+
+    /* Hero buttons */
+    .st-key-hero_actions {
+        padding: 0 20px;
+        margin-top: -55px;
+    }
+
+    /* Section headings */
+    .section-head {
+        margin: 40px auto 22px;
+        padding: 0 18px;
+    }
+
+    .section-title {
+        font-size: 25px;
+    }
+
+    .section-copy {
+        font-size: 12px;
+    }
+
+    /* Feature and agent cards */
+    .st-key-feature_section,
+    .agent-section,
+    .pipeline-section,
+    .workflow-wrap {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .feature-card,
+    .agent-card,
+    .pipeline-card,
+    .workflow-card {
+        min-height: auto;
+        padding: 20px 17px;
+    }
+
+    /* Evaluation panels */
+    .eval-panel,
+    .agent-input-panel,
+    .agent-verdict {
+        padding: 20px 17px;
+    }
+
+    /* Results */
+    .agent-output {
+        padding: 16px;
+    }
+
+    /* Bottom CTA */
+    .bottom-cta {
+        margin: 35px 18px 0;
+        padding: 30px 17px;
+    }
+
+    /* Footer */
+    .footer {
+        margin: 28px 18px 0;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* Prevent oversized elements */
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
